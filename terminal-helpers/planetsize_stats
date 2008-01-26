@@ -66,15 +66,8 @@
 	}
 
 	$max = max($diagram);
-	$min = min($diagram);
-	if($max == $min)
-		$diagram = array_pad(array(), $width, $height);
-	else
-	{
-		$this_max = $max-$min;
-		foreach($diagram as $i=>$v)
-			$diagram[$i] = round($height*($v-$min)/$this_max);
-	}
+	foreach($diagram as $i=>$v)
+		$diagram[$i] = round($height*$v/$max);
 
 	for($i=$height; $i>0; $i--)
 	{
