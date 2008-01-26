@@ -67,7 +67,7 @@
 
 	$max = max($diagram);
 	foreach($diagram as $i=>$v)
-		$diagram[$i] = round($height*$v/$max);
+		$diagram[$i] = ceil($height*$v/$max);
 
 	for($i=$height; $i>0; $i--)
 	{
