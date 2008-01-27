@@ -1,0 +1,56 @@
+#!/usr/bin/php
+<?php
+/*
+    This file is part of Stars Under Attack.
+
+    Stars Under Attack is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Stars Under Attack is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with Stars Under Attack.  If not, see <http://www.gnu.org/licenses/>.
+*/
+	if(!isset($_SERVER['argv'][1]) || !isset($_SERVER["argv"][2]) || !isset($_SERVER["argv"][3]))
+	{
+		fputs(STDERR, "Usage: ".$_SERVER['argv'][0]." <Galaxy file name> <System> <New length>\n");
+		exit(1);
+	}
+
+	$new_length = $_SERVER["argv"][3]-10;
+	if($new_length < 0 || $new_length > 20)
+	{
+		fputs(STDERR, "Lenght must be between 10 and 30.\n");
+		exit(1);
+	}
+
+	if(!is_file($_SERVER["argv"][1]) || !is_readable($_SERVER["argv"][0]) || !is_writable($_SERVER["argv"][1]))
+	{
+		fputs(STDERR, "Could not open file.\n");
+		exit(1);
+	}
+
+	$fh = fopen($_SERVER["argv"][1], "r+");
+	flock($fh, LOCK_EX);
+
+	$pos = ($system-1)*1655;
+	if(filesize($_SERVER["argv"][1]) < $pos+1655)
+	{
+		fputs(STDERR, "System does not exist.\n");
+		exit(1);
+	}
+
+	fseek($fh, $pos, SEEK_SET);
+
+	$byte = fread($fh, 1);
+	fseek($fh, $pos, SEEK_SET);
+	fwrite($fh, ($byte & 7) | ($new_length << 2));
+	flock($fh, LOCK_UN);
+	fclose($fh);
+	exit(0);
+?>
