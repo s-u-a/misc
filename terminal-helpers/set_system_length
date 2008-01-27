@@ -49,7 +49,7 @@
 
 	$byte = fread($fh, 1);
 	fseek($fh, $pos, SEEK_SET);
-	fwrite($fh, ($byte & 7) | ($new_length << 2));
+	fwrite($fh, ($byte & 7) | ($new_length << 3));
 	flock($fh, LOCK_UN);
 	fclose($fh);
 	exit(0);
