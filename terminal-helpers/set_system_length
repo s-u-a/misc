@@ -38,7 +38,7 @@
 	$fh = fopen($_SERVER["argv"][1], "r+");
 	flock($fh, LOCK_EX);
 
-	$pos = ($system-1)*1655;
+	$pos = ($_SERVER["argv"][2]-1)*1655;
 	if(filesize($_SERVER["argv"][1]) < $pos+1655)
 	{
 		fputs(STDERR, "System does not exist.\n");
