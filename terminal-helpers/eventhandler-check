@@ -1,0 +1,44 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]; then
+	echo "Usage: $0 <Game directory>"
+	exit 1
+fi
+
+if [ ! -d $1 ]; then
+	echo "Error: $1 is not a directory."
+	exit 1
+fi
+
+eh_bin="$1/db_things/eventhandler"
+eh_pidf="$1/database.global/eventhandler.pid"
+
+if [ ! -f $eh_bin -o ! -r $eh_bin -o ! -x $eh_bin ]; then
+	echo "Error: $1 is not executable."
+	exit 1
+fi
+
+eh_start=0
+
+if [ ! -e $eh_pidf ]; then
+	eh_start=1
+elif [ ! -f $eh_pidf -o ! -r $eh_pidf ]; then
+	echo "Error: $eh_pidf is not readable."
+	exit 1
+else
+	eh_pid=`cat $eh_pidf`
+	if [[ $eh_pid ]]; then
+		if [ ! -d /proc/$eh_pid ]; then
+			eh_start=1
+		fi
+	else
+		eh_start=1
+	fi
+fi
+
+if [ $eh_start -gt 0 ]; then
+	$eh_bin -d
+	exit $?
+fi
+
+exit 0
